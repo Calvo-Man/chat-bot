@@ -1,14 +1,18 @@
 <script setup>
 import Navegacion from "./components/Navegacion.vue";
+import ChatBot from "./components/ChatBot.vue";
 </script>
 
 <template>
+ 
   <v-layout>
     <Navegacion />
+    <ChatBot />
+    
   </v-layout>
 </template>
 
-<style scoped>
+<style>
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -17,8 +21,7 @@ import Navegacion from "./components/Navegacion.vue";
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
+  cursor: pointer;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
