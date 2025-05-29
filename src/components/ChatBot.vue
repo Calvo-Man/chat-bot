@@ -22,7 +22,7 @@
         class="mb-2 d-flex"
         :class="msg.sender === 'Bot' ? 'justify-start' : 'justify-end'"
       >
-        <div class="d-flex  container-bot" v-if="msg.sender === 'Bot'">
+        <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
           <img :src="robotIcon" width="30" height="30" />
           <v-card class="bot-message ml-2">
             <v-card-text>{{ msg.text }}</v-card-text>
@@ -54,8 +54,12 @@
       @click:append-inner="sendMessage"
     />
   </v-card>
-  <div class="chat-action logo" @click="showChat = !showChat" v-show="!showChat">
-   <img :src="robotIcon" width="50" height="50"/>
+  <div
+    class="chat-action logo"
+    @click="showChat = !showChat"
+    v-show="!showChat"
+  >
+    <img :src="robotIcon" width="50" height="50" />
   </div>
 </template>
 
@@ -144,34 +148,28 @@ function sendMessage() {
 
 .chat-action {
   position: absolute;
-  bottom:  0px;
+  bottom: 0px;
   right: 10px;
 }
 .custom-input div {
-  border-radius: 50px !important; 
+  border-radius: 50px !important;
 }
 .chat-window {
   background-color: #eceff1;
   border-radius: 0px;
-  
+
   width: 100%;
 }
 .bot-message {
   border-radius: 10px 10px 10px 1px !important;
-  
- box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
-  
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .user-message {
   border-radius: 10px 10px 3px 10px !important;
-  background: linear-gradient(
-    90deg,
-    #3b67df,
-    #8430f1
-  ); 
+  background: linear-gradient(90deg, #3b67df, #8430f1);
   color: #ffffff;
- 
-  
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>
