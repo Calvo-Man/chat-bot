@@ -3,8 +3,8 @@
     <v-app-bar-title>OptiFood IA</v-app-bar-title>
 
     <v-spacer />
-    <v-app-bar-nav-icon @click="drawer = !drawer" class="d-sm-none" />
-    <div class="d-none d-sm-flex">
+    <v-app-bar-nav-icon @click="drawer = !drawer" class="d-md-none" />
+    <div class="d-none d-md-flex">
       <v-btn class="boton" text to="/acerca">Alimentos</v-btn>
       <v-btn class="boton" text to="/contacto">Medio ambiente</v-btn>
       <v-btn class="boton" text to="/contacto">Conócenos</v-btn>
@@ -14,7 +14,7 @@
     </div>
   </v-app-bar>
 
-  <!-- Drawer lateral para móviles -->
+  
   <v-navigation-drawer v-model="drawer" temporary class="d-sm-none">
     <v-list>
       <v-list-item to="/acerca" title="Alimentos" />
