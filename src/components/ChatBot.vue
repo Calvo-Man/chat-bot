@@ -15,7 +15,7 @@
     </template>
     <v-divider></v-divider>
 
-    <v-card-text class="chat-window" style="height: 67vh; overflow-y: auto">
+    <v-card-text class="chat-window" style=" overflow-y: auto">
       <div
         v-for="(msg, i) in messages"
         :key="i"
@@ -135,41 +135,73 @@ function sendMessage() {
 
 <style scoped>
 .chat-card {
-  width: 550px;
-  position: absolute;
-  top: 70px;
+  width: 100%;
+  max-width: 550px;
+  position: fixed;
+  bottom: 5px;
   right: 10px;
-}
-.custom-input {
-  margin: 10px 0px 10px 30px;
-  border-radius: 50%;
-  height: 40px;
+  margin: 0 10px;
 }
 
-.chat-action {
-  position: absolute;
-  bottom: 0px;
-  right: 10px;
+@media (max-width: 600px) {
+  .chat-card {
+    bottom: 10px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    border-radius: 10px 10px 0 0;
+    
+  }
 }
-.custom-input div {
-  border-radius: 50px !important;
-}
+
 .chat-window {
   background-color: #eceff1;
-  border-radius: 0px;
-
+  border-radius: 0;
   width: 100%;
+  height: 67vh;
 }
+@media (max-width: 600px) {
+  .chat-window{
+    height: calc(85vh - 100px);
+  }
+}
+
 .bot-message {
   border-radius: 10px 10px 10px 1px !important;
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 80%;
+  word-break: break-word;
 }
+
 .user-message {
   border-radius: 10px 10px 3px 10px !important;
   background: linear-gradient(90deg, #3b67df, #8430f1);
   color: #ffffff;
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 80%;
+  word-break: break-word;
 }
+
+.custom-input {
+  margin: 10px 20px;
+}
+
+.custom-input .v-input__control {
+  border-radius: 50px !important;
+}
+
+.chat-action {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+@media (max-width: 600px) {
+  .chat-action {
+    right: 10px;
+    bottom: 10px;
+  }
+}
+
 </style>
