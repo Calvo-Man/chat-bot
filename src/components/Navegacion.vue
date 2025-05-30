@@ -15,7 +15,7 @@
   </v-app-bar>
 
   
-  <v-navigation-drawer v-model="drawer" temporary class="d-sm-none">
+  <v-navigation-drawer v-model="drawer" temporary class="d-md-none">
     <v-list>
       <v-list-item to="/acerca" title="Alimentos" />
       <v-list-item to="/contacto" title="Medio ambiente" />

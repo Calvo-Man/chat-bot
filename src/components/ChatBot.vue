@@ -15,7 +15,7 @@
     </template>
     <v-divider></v-divider>
 
-    <v-card-text class="chat-window" style=" overflow-y: auto">
+    <v-card-text class="chat-window" style="overflow-y: auto">
       <div
         v-for="(msg, i) in messages"
         :key="i"
@@ -24,15 +24,19 @@
       >
         <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
           <img :src="robotIcon" width="30" height="30" />
-          <v-card class="bot-message ml-2">
-            <v-card-text>{{ msg.text }}</v-card-text>
-            <v-card-subtitle>{{ msg.date }}</v-card-subtitle>
+          <v-card class="bot-message ml-2 pa-2">
+            <p>{{ msg.text }}</p>
+            <p class="date">{{ msg.date }}</p>
+            <!-- <v-card-text>{{ msg.text }}</v-card-text>
+            <v-card-subtitle>{{ msg.date }}</v-card-subtitle> -->
           </v-card>
         </div>
         <div class="d-flex" v-if="msg.sender === 'Tu'">
-          <v-card class="user-message mr-2">
-            <v-card-text>{{ msg.text }}</v-card-text>
-            <v-card-subtitle>{{ msg.date }}</v-card-subtitle>
+          <v-card class="user-message mr- pa-2">
+            <p style="color: white">{{ msg.text }}</p>
+            <p class="date-user">{{ msg.date }}</p>
+            <!-- <v-card-text>{{ msg.text }}</v-card-text> -->
+            <!-- <v-card-subtitle>{{ msg.date }}</v-card-subtitle> -->
           </v-card>
           <img :src="usesrIcon" width="30" height="30" />
         </div>
@@ -52,7 +56,11 @@
       hide-details
       single-line
       @click:append-inner="sendMessage"
-    />
+    >
+      <!-- <template v-slot:append-inner>
+        <v-icon :color="model ? 'primary' : undefined" icon="$vuetify" />
+      </template> -->
+    </v-text-field>
   </v-card>
   <div
     class="chat-action logo"
@@ -150,7 +158,6 @@ function sendMessage() {
     left: 0;
     margin: 0 auto;
     border-radius: 10px 10px 0 0;
-    
   }
 }
 
@@ -159,35 +166,42 @@ function sendMessage() {
   border-radius: 0;
   width: 100%;
   height: 67vh;
+  box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
-  .chat-window{
-    height:65vh;
+  .chat-window {
+    height: 65vh;
   }
 }
-
+.date {
+  font-size: 12px;
+  color: #706c6c;
+  margin-top: 5px;
+}
+.date-user {
+  font-size: 12px;
+  color: #ddd8d8;
+  margin-top: 5px;
+}
 .bot-message {
   border-radius: 10px 10px 10px 1px !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: normal !important;
+  background-color: #5df17d;
   max-width: 80%;
-  word-break: break-word;
 }
 
 .user-message {
   border-radius: 10px 10px 3px 10px !important;
   background: linear-gradient(90deg, #3b67df, #8430f1);
-  color: #ffffff;
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 80%;
-  word-break: break-word;
+  letter-spacing: 0px !important;
 }
 
 .custom-input {
-  margin: 10px 20px;
-}
-
-.custom-input .v-input__control {
-  border-radius: 50px !important;
+  margin: 10px 25px;
+  border-radius: 20px !important;
 }
 
 .chat-action {
@@ -203,5 +217,9 @@ function sendMessage() {
     bottom: 10px;
   }
 }
-
+.input-container {
+  position: relative;
+  width: 90%;
+  margin: auto;
+}
 </style>
