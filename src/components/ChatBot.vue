@@ -162,7 +162,7 @@ function sendMessage() {
 }
 @media (max-width: 600px) {
   .chat-window{
-    height:68vh;
+    height:50vh;
   }
 }
 
