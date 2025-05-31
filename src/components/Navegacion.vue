@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="success" dark>
+  <v-app-bar color="success" dark height="50">
     <v-app-bar-title>OptiFood IA</v-app-bar-title>
 
     <v-spacer />

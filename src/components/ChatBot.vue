@@ -4,11 +4,11 @@
     class="chat-card"
     title="OptiFood IA"
     subtitle="Tu asistente inteligente"
-    elevation="4"
+    elevation="3"
     v-show="showChat"
   >
     <template v-slot:prepend>
-      <img :src="robotIcon" />
+      <img :src="robotIcon" width="50" height="50" />
     </template>
     <template v-slot:append>
       <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
@@ -23,7 +23,7 @@
         :class="msg.sender === 'Bot' ? 'justify-start' : 'justify-end'"
       >
         <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
-          <img :src="robotIcon" width="30" height="30" />
+          <img :src="robotIcon" width="40" height="40" />
           <v-card class="bot-message ml-2 pa-2">
             <p>{{ msg.text }}</p>
             <p class="date">{{ msg.date }}</p>
@@ -44,24 +44,26 @@
     </v-card-text>
 
     <v-text-field
+      
       class="custom-input"
       width="90%"
       bg-color="black"
       v-model="userInput"
       label="Escribe tú pregunta sobre nutrición..."
       @keyup.enter="sendMessage"
-      append-inner-icon="mdi-send"
+      
       variant="solo"
       density="compact"
       hide-details
       single-line
       @click:append-inner="sendMessage"
     >
-      <!-- <template v-slot:append-inner>
-        <v-icon :color="model ? 'primary' : undefined" icon="$vuetify" />
-      </template> -->
+      <template v-slot:append-inner>
+        <img :src="sendIcon" width="30" height="30"/>
+      </template>
     </v-text-field>
   </v-card>
+  
   <div
     class="chat-action logo"
     @click="showChat = !showChat"
@@ -75,6 +77,7 @@
 import { ref } from "vue";
 import robotIcon from "../assets/robot-mensaje.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
+import sendIcon from "../assets/send-icon.png";
 import axios from "axios";
 const userInput = ref("");
 const messages = ref([
@@ -147,7 +150,8 @@ function sendMessage() {
   max-width: 550px;
   position: fixed;
   bottom: 5px;
-  right: 10px;
+  height: 90vh;
+  right: 0px;
   margin: 0 10px;
 }
 
@@ -156,6 +160,7 @@ function sendMessage() {
     bottom: 10px;
     right: 0;
     left: 0;
+    height: 93vh;
     margin: 0 auto;
     border-radius: 10px 10px 0 0;
   }
@@ -165,12 +170,12 @@ function sendMessage() {
   background-color: #eceff1;
   border-radius: 0;
   width: 100%;
-  height: 67vh;
+  height: 75%;
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
   .chat-window {
-    height: 65vh;
+    height: 80%;
   }
 }
 .date {
@@ -187,8 +192,8 @@ function sendMessage() {
   border-radius: 10px 10px 10px 1px !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: normal !important;
-  background-color: #5df17d;
-  max-width: 80%;
+  background-color: #69f192;
+  
 }
 
 .user-message {
@@ -217,9 +222,5 @@ function sendMessage() {
     bottom: 10px;
   }
 }
-.input-container {
-  position: relative;
-  width: 90%;
-  margin: auto;
-}
+
 </style>
