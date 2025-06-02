@@ -8,7 +8,7 @@
     v-show="showChat"
   >
     <template v-slot:prepend>
-      <img :src="robotIcon" width="50" height="50" />
+      <img :src="robotIcon" width="60" height="70" />
     </template>
     <template v-slot:append>
       <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
@@ -23,18 +23,18 @@
         :class="msg.sender === 'Bot' ? 'justify-start' : 'justify-end'"
       >
         <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
-          <img :src="robotIcon" width="20" height="20" />
-          <v-card class="bot-message ml-2 pa-2">
-            <div class="pa-2" v-html="msg.text"></div>
-            <p class="date-bot pa-2">{{ msg.date }}</p>
+          <img :src="robotIcon" width="50" height="60" />
+
+          <v-card class="bot-message ml- pa-2">
+            <div v-if="writting"  v-html="msg.text"></div>
+            <div v-else class="mb-2 pa-2" v-html="msg.text"></div>
+            <p class="date-bot">{{ msg.date }}</p>
           </v-card>
         </div>
         <div class="d-flex" v-if="msg.sender === 'Tu'">
           <v-card class="user-message mr- pa-2">
             <p style="color: white">{{ msg.text }}</p>
             <p class="date-user">{{ msg.date }}</p>
-            <!-- <v-card-text>{{ msg.text }}</v-card-text> -->
-            <!-- <v-card-subtitle>{{ msg.date }}</v-card-subtitle> -->
           </v-card>
           <img :src="usesrIcon" width="30" height="30" />
         </div>
@@ -71,21 +71,20 @@
     @click="showChat = !showChat"
     v-show="!showChat"
   >
-    <img :src="robotIcon" width="50" height="50" />
+    <img :src="robotIcon" width="90" height="90" />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import robotIcon from "../assets/robot-mensaje.png";
+import robotIcon from "../assets/bot-img-verde.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
 import sendIcon from "../assets/send-icon.png";
-import DOMPurify from "dompurify";
 import { markdownToHtml } from "../services/markdowntohtml";
 
 import axios from "axios";
 import { sendMessageToOpenAI } from "../services/openia";
-//const userInput = ref("");
+
 const showChat = ref(true);
 </script>
 <script>
@@ -94,11 +93,12 @@ export default {
     return {
       userMessage: "",
       userInput: "",
+      writting: false,
       conversation: [
         {
           role: "system",
           content:
-            "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es recomendar acciones para evitar tantos desechos de alimentos en el hogar. Responde siempre en un formato adecuado para mostrar en un chat y usa titulos adecuados y listas. Solo debes responder preguntas relacionadas con ese tema. Si el usuario pregunta algo fuera de ese tema, responde educadamente que no puedes ayudar con eso.",
+            "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es dar consejos para evitar tantos desechos de alimentos en el hogar. Responde siempre en un formato adecuado para mostrar en un chat y usa titulos adecuados minimo h2 y listas adeacuadas con sangria respectivamente. Todo lo que respondas va a estar relacionado con ese tema.",
         },
       ],
       messages: [
@@ -126,18 +126,40 @@ export default {
           hour12: false,
         }),
       });
-
+      this.writting = true;
+      this.messages.push({
+        sender: "Bot",
+        text: markdownToHtml("**Escribiendo...**"),
+        date: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+      });
+      
       // Añadir el mensaje del usuario al historial
       this.conversation.push({
         role: "user",
         content: this.userMessage.trim(),
       });
+      this.userMessage = "";
 
       try {
         const res = await sendMessageToOpenAI(this.conversation);
-
         const markdown = res.data.choices[0].message.content;
+        
         const replyContent = markdownToHtml(markdown);
+        
+        this.writting = false;
+        this.messages.pop({
+          sender: "Bot",
+          text: "Escribiendo...",
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        });
         this.messages.push({
           sender: "Bot",
           text: replyContent,
@@ -158,7 +180,10 @@ export default {
         });
       }
 
-      this.userMessage = "";
+      this.$nextTick(() => {
+        const chatWindow = document.querySelector(".chat-window");
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      });
     },
   },
 };
@@ -190,7 +215,7 @@ export default {
   background-color: #eceff1;
   border-radius: 0;
   width: 100%;
-  height: calc(100% - 140px);
+  height: calc(100% - 160px);
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
