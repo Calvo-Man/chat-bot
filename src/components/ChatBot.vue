@@ -75,7 +75,7 @@ import robotIcon from "../assets/robot-mensaje.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
 import sendIcon from "../assets/send-icon.png";
 import DOMPurify from 'dompurify';
-import { markdownToHtml } from '../services/markdownToHtml';
+import { markdownToHtml } from '@/services/markdownToHtml';
 
 import axios from "axios";
 import { sendMessageToOpenAI } from "../services/openia";
