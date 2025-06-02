@@ -55,7 +55,13 @@
       @click:append-inner="sendMessage"
     >
       <template v-slot:append-inner>
-        <img :src="sendIcon" width="30" height="30" @click="sendMessage" style="cursor: pointer"/>
+        <img
+          :src="sendIcon"
+          width="30"
+          height="30"
+          @click="sendMessage"
+          style="cursor: pointer"
+        />
       </template>
     </v-text-field>
   </v-card>
@@ -74,14 +80,13 @@ import { ref } from "vue";
 import robotIcon from "../assets/robot-mensaje.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
 import sendIcon from "../assets/send-icon.png";
-import DOMPurify from 'dompurify';
-import { markdownToHtml } from '@/services/markdownToHtml';
+import DOMPurify from "dompurify";
+import { markdownToHtml } from "../services/markdowntohtml";
 
 import axios from "axios";
 import { sendMessageToOpenAI } from "../services/openia";
 //const userInput = ref("");
 const showChat = ref(true);
-
 </script>
 <script>
 export default {
@@ -120,14 +125,17 @@ export default {
           minute: "2-digit",
           hour12: false,
         }),
-      })
+      });
 
       // Añadir el mensaje del usuario al historial
-      this.conversation.push({ role: "user", content: this.userMessage.trim() });
+      this.conversation.push({
+        role: "user",
+        content: this.userMessage.trim(),
+      });
 
       try {
         const res = await sendMessageToOpenAI(this.conversation);
-        
+
         const markdown = res.data.choices[0].message.content;
         const replyContent = markdownToHtml(markdown);
         this.messages.push({
@@ -138,7 +146,7 @@ export default {
             minute: "2-digit",
             hour12: false,
           }),
-        })
+        });
         const reply = res.data.choices[0].message;
         // Añadir respuesta del asistente al historial
         this.conversation.push(reply);
