@@ -85,7 +85,7 @@ import { markdownToHtml } from "../services/markdowntohtml";
 import axios from "axios";
 import { sendMessageToOpenAI } from "../services/openia";
 
-const showChat = ref(true);
+const showChat = ref(false);
 </script>
 <script>
 export default {
@@ -93,6 +93,7 @@ export default {
     return {
       userMessage: "",
       userInput: "",
+      apiBackend: import.meta.env.VITE_API_BACKEND,
       writting: false,
       conversation: [
         {
@@ -115,6 +116,14 @@ export default {
     };
   },
   methods: {
+    async getMessages() {
+      try {
+        const response = await axios.get(this.apiBackend);
+        this.messages = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async sendMessage() {
       if (!this.userMessage.trim()) return;
       this.messages.push({

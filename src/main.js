@@ -2,7 +2,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 // import './style.css'
-// import router from "./router/index";
+import router from "./router/index";
 import { createVuetify } from "vuetify";
 import "vuetify/styles";
 
@@ -25,7 +25,7 @@ const vuetify = createVuetify({
 const app = createApp(App);
 
 // Usa el enrutador de Vue y Vuetify en la aplicación
-// app.use(router);
+app.use(router);
 app.use(vuetify);
 
 // Monta la aplicación

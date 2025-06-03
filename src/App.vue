@@ -4,15 +4,23 @@ import ChatBot from "./components/ChatBot.vue";
 </script>
 
 <template>
- 
-  <v-layout>
+  <v-app>
     <Navegacion />
-    <ChatBot />
-    
-  </v-layout>
+    <div class="container">
+      <RouterView  />
+    </div>
+    <v-layout>
+      <ChatBot />
+    </v-layout>
+  </v-app>
 </template>
 
 <style>
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top:15px ;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -23,5 +31,4 @@ import ChatBot from "./components/ChatBot.vue";
   filter: drop-shadow(0 0 2em #555ceeaa);
   cursor: pointer;
 }
-
 </style>
