@@ -10,7 +10,9 @@
     <template v-slot:prepend>
       <img :src="robotIcon" width="50" height="50" />
     </template>
+    <template v-slot:append-outer> </template>
     <template v-slot:append>
+      <v-btn icon="mdi-plus" @click="newChat" variant="text"></v-btn>
       <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
     </template>
     <v-divider></v-divider>
@@ -115,6 +117,29 @@ export default {
     };
   },
   methods: {
+    async newChat() {
+      this.messages = [
+        {
+          sender: "Bot",
+          text: "¡Hola! Soy Optifood IA, tu asistente personal. Estoy aqui para ayudarte a reducir el desperdicio de alimentos en casa. Solo puedo responder una pregunta.",
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        },
+      ];
+      this.conversation = [
+        {
+          role: "system",
+          content:
+            "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es recomendar acciones para evitar tantos desechos de alimentos en el hogar.",
+        },
+      ];
+
+      this.userMessage = "";
+      this.limitReached = false;
+    },
     async sendMessage() {
       if (!this.userMessage.trim()) return;
       this.messages.push({
@@ -182,9 +207,9 @@ export default {
             }),
           });
         }
-        const reply = res.data.choices[0].message;
         // Añadir respuesta del asistente al historial
-        this.conversation.push(reply);
+        // const reply = res.data.choices[0].message;
+        // this.conversation.push(reply);
       } catch (error) {
         console.error("Error al conectar con OpenAI:", error);
         this.conversation.push({
