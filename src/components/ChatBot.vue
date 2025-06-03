@@ -10,7 +10,7 @@
     <template v-slot:prepend>
       <img :src="robotIcon" width="50" height="50" />
     </template>
-    <template v-slot:append-outer> </template>
+    
     <template v-slot:append>
       <v-btn icon="mdi-plus" @click="newChat" variant="text"></v-btn>
       <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
@@ -233,7 +233,7 @@ export default {
   max-width: 550px;
   position: fixed;
   bottom: 5px;
-  height: calc(100% - 50px);
+  height: calc(100% - 10px);
   right: 0px;
   margin: 0 10px;
 }

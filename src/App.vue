@@ -4,11 +4,7 @@ import ChatBot from "./components/ChatBot.vue";
 </script>
 
 <template>
-  <v-app>
-    <Navegacion />
-    <div class="container">
-      <RouterView  />
-    </div>
+  <v-app style="background-color: #f5f5f5">
     <v-layout>
       <ChatBot />
     </v-layout>
