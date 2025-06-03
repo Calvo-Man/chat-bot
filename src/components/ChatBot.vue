@@ -26,7 +26,7 @@
           <img :src="robotIcon" width="50" height="60" />
 
           <v-card class="bot-message ml- pa-2">
-            <div v-if="writting"  v-html="msg.text"></div>
+            <div v-if="writting" v-html="msg.text"></div>
             <div v-else class="mb-2 pa-2" v-html="msg.text"></div>
             <p class="date-bot">{{ msg.date }}</p>
           </v-card>
@@ -42,6 +42,7 @@
     </v-card-text>
 
     <v-text-field
+      :disabled="limitReached"
       class="custom-input"
       width="90%"
       bg-color="black"
@@ -74,18 +75,15 @@
     <img :src="robotIcon" width="90" height="90" />
   </div>
 </template>
-
 <script setup>
 import { ref } from "vue";
 import robotIcon from "../assets/bot-img-verde.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
 import sendIcon from "../assets/send-icon.png";
 import { markdownToHtml } from "../services/markdowntohtml";
-
 import axios from "axios";
 import { sendMessageToOpenAI } from "../services/openia";
-
-const showChat = ref(false);
+const showChat = ref(true);
 </script>
 <script>
 export default {
@@ -93,6 +91,7 @@ export default {
     return {
       userMessage: "",
       userInput: "",
+      limitReached: false,
       apiBackend: import.meta.env.VITE_API_BACKEND,
       writting: false,
       conversation: [
@@ -105,7 +104,7 @@ export default {
       messages: [
         {
           sender: "Bot",
-          text: "¡Hola! Soy Optifood IA, tu asistente personal. ¿En qué puedo ayudarte hoy?",
+          text: "¡Hola! Soy Optifood IA, tu asistente personal. Estoy aquí para ayudarte a reducir el desperdicio de alimentos en casa. Solo puedo responder una pregunta.",
           date: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -116,14 +115,6 @@ export default {
     };
   },
   methods: {
-    async getMessages() {
-      try {
-        const response = await axios.get(this.apiBackend);
-        this.messages = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     async sendMessage() {
       if (!this.userMessage.trim()) return;
       this.messages.push({
@@ -145,20 +136,20 @@ export default {
           hour12: false,
         }),
       });
-      
+
       // Añadir el mensaje del usuario al historial
       this.conversation.push({
         role: "user",
         content: this.userMessage.trim(),
       });
       this.userMessage = "";
-
       try {
         const res = await sendMessageToOpenAI(this.conversation);
         const markdown = res.data.choices[0].message.content;
-        
+        this.limitReached = true;
+
         const replyContent = markdownToHtml(markdown);
-        
+
         this.writting = false;
         this.messages.pop({
           sender: "Bot",
@@ -178,6 +169,19 @@ export default {
             hour12: false,
           }),
         });
+        if (this.limitReached) {
+          this.messages.push({
+            sender: "Bot",
+            text: markdownToHtml(
+              "**Gracias por usar nuestro servicio de Optifood IA, vuelva pronto.**"
+            ),
+            date: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }),
+          });
+        }
         const reply = res.data.choices[0].message;
         // Añadir respuesta del asistente al historial
         this.conversation.push(reply);

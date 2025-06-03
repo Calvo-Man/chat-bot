@@ -19,7 +19,7 @@ import ChatBot from "./components/ChatBot.vue";
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  margin-top:15px ;
+  margin-top: 50px ;
 }
 .logo {
   height: 6em;
