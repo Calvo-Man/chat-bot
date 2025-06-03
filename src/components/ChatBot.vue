@@ -8,7 +8,7 @@
     v-show="showChat"
   >
     <template v-slot:prepend>
-      <img :src="robotIcon" width="60" height="70" />
+      <img :src="robotIcon" width="50" height="50" />
     </template>
     <template v-slot:append>
       <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
@@ -23,7 +23,7 @@
         :class="msg.sender === 'Bot' ? 'justify-start' : 'justify-end'"
       >
         <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
-          <img :src="robotIcon" width="50" height="60" />
+          <img :src="robotIcon" width="30" height="30" />
 
           <v-card class="bot-message ml- pa-2">
             <div v-if="writting" v-html="msg.text"></div>
@@ -72,12 +72,12 @@
     @click="showChat = !showChat"
     v-show="!showChat"
   >
-    <img :src="robotIcon" width="90" height="90" />
+    <img :src="robotIcon" width="60" height="60" />
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
-import robotIcon from "../assets/bot-img-verde.png";
+import robotIcon from "../assets/robot-mensaje.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
 import sendIcon from "../assets/send-icon.png";
 import { markdownToHtml } from "../services/markdowntohtml";
@@ -228,7 +228,7 @@ export default {
   background-color: #eceff1;
   border-radius: 0;
   width: 100%;
-  height: calc(100% - 160px);
+  height: calc(100% - 140px);
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
