@@ -243,7 +243,7 @@ export default {
     bottom: 10px;
     right: 0;
     left: 0;
-    height: 93vh;
+    
     margin: 0 auto;
     border-radius: 10px 10px 0 0;
   }
@@ -257,6 +257,7 @@ export default {
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
+  
  
 }
 .date {
