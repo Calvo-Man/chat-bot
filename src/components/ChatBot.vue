@@ -257,9 +257,7 @@ export default {
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
-  .chat-window {
-    height: 80%;
-  }
+ 
 }
 .date {
   font-size: 12px;
