@@ -272,6 +272,7 @@ export default {
 }
 .bot-message {
   border-radius: 10px 10px 10px 1px !important;
+  margin-left: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: normal !important;
   background-color: #ffffff;
