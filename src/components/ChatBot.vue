@@ -2,7 +2,7 @@
 <template>
   <v-card
     class="chat-card"
-    title="OptiFood IA"
+    title="OPTIFOOD IA"
     subtitle="Tu asistente inteligente"
     elevation="3"
     v-show="showChat"
@@ -79,7 +79,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import robotIcon from "../assets/robot-mensaje.png";
+import robotIcon from "../assets/bot-icon.png";
 import usesrIcon from "../assets/user-mensaje-2.png";
 import sendIcon from "../assets/send-icon.png";
 import { markdownToHtml } from "../services/markdowntohtml";
@@ -274,7 +274,7 @@ export default {
   border-radius: 10px 10px 10px 1px !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: normal !important;
-  background-color: #69f192;
+  background-color: #ffffff;
 }
 
 .user-message {
