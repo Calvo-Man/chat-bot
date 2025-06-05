@@ -10,7 +10,7 @@
     <template v-slot:prepend>
       <img :src="robotIcon" width="50" height="50" />
     </template>
-    
+
     <template v-slot:append>
       <v-btn icon="mdi-plus" @click="newChat" variant="text"></v-btn>
       <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
@@ -92,17 +92,16 @@ export default {
   data() {
     return {
       userMessage: "",
-      userInput: "",
       limitReached: false,
       apiBackend: import.meta.env.VITE_API_BACKEND,
       writting: false,
-      conversation: [
-        {
-          role: "system",
-          content:
-            "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es dar consejos para evitar tantos desechos de alimentos en el hogar. Responde siempre en un formato adecuado para mostrar en un chat y usa titulos adecuados minimo h2 y listas adeacuadas con sangria respectivamente. Todo lo que respondas va a estar relacionado con ese tema.",
-        },
-      ],
+      // conversation: [
+      //   {
+      //     role: "system",
+      //     content:
+      //       "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es dar consejos para evitar tantos desechos de alimentos en el hogar. Responde siempre en un formato adecuado para mostrar en un chat y usa titulos adecuados minimo h2 y listas adeacuadas con sangria respectivamente. Todo lo que respondas va a estar relacionado con ese tema.",
+      //   },
+      // ],
       messages: [
         {
           sender: "Bot",
@@ -114,6 +113,20 @@ export default {
           }),
         },
       ],
+      dataSend: {
+        country: "Colombia",
+        category: null,
+        purchased_tons: null,
+        wasted_tons: null,
+        total_value: null,
+        sales_volume: null,
+        storage_temperature: null,
+        rotation_method: null,
+        lead_time_days: null,
+        order_frequency: null,
+        shelf_life_days: null,
+        additional_context: null,
+      },
     };
   },
   methods: {
@@ -129,14 +142,6 @@ export default {
           }),
         },
       ];
-      this.conversation = [
-        {
-          role: "system",
-          content:
-            "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es recomendar acciones para evitar tantos desechos de alimentos en el hogar.",
-        },
-      ];
-
       this.userMessage = "";
       this.limitReached = false;
     },
@@ -161,62 +166,24 @@ export default {
           hour12: false,
         }),
       });
-
-      // Añadir el mensaje del usuario al historial
-      this.conversation.push({
-        role: "user",
-        content: this.userMessage.trim(),
-      });
-      this.userMessage = "";
       try {
-        const res = await sendMessageToOpenAI(this.conversation);
-        const markdown = res.data.choices[0].message.content;
-        this.limitReached = true;
-
-        const replyContent = markdownToHtml(markdown);
-
-        this.writting = false;
-        this.messages.pop({
-          sender: "Bot",
-          text: "Escribiendo...",
-          date: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          }),
-        });
-        this.messages.push({
-          sender: "Bot",
-          text: replyContent,
-          date: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          }),
-        });
-        if (this.limitReached) {
-          this.messages.push({
-            sender: "Bot",
-            text: markdownToHtml(
-              "**Gracias por usar nuestro servicio de Optifood IA, vuelva pronto.**"
-            ),
-            date: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            }),
-          });
-        }
-        // Añadir respuesta del asistente al historial
-        // const reply = res.data.choices[0].message;
-        // this.conversation.push(reply);
+        const response = await axios.post(
+          `${this.apiBackend}`,
+          {
+            dataSend: this.dataSend,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
       } catch (error) {
-        console.error("Error al conectar con OpenAI:", error);
-        this.conversation.push({
-          role: "assistant",
-          content: "Ocurrió un error al intentar responder.",
-        });
+        console.log(error);
       }
+      this.userMessage = "";
+      this.limitReached = false;
+      this.writting = false;
 
       this.$nextTick(() => {
         const chatWindow = document.querySelector(".chat-window");
@@ -243,7 +210,7 @@ export default {
     bottom: 10px;
     right: 0;
     left: 0;
-    
+
     margin: 0 auto;
     border-radius: 10px 10px 0 0;
   }
@@ -257,8 +224,6 @@ export default {
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
 @media (max-width: 600px) {
-  
- 
 }
 .date {
   font-size: 12px;
