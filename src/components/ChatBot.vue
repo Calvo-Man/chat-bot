@@ -231,6 +231,7 @@ export default {
           "sales_volume",
           "lead_time_days",
           "shelf_life_days",
+          "storage_temperature",
         ];
         if (numericKeys.includes(key) && isNaN(parseFloat(value))) {
           this.messages.push({
