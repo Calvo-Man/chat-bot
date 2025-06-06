@@ -320,21 +320,21 @@ export default {
             hour12: false,
           }),
         });
+        this.messages.push({
+          sender: "Bot",
+          text: markdownToHtml(
+          "**Gracias por usar nuestro service de Optifood IA. ¡Hasta luego!**"
+          ),
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        })
       } catch (error) {
         console.log(error);
       }
       
-      this.messages.push({
-        sender: "Bot",
-        text: markdownToHtml(
-        "**Gracias por usar nuestro service de Optifood IA. ¡Hasta luego!**"
-        ),
-        date: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        }),
-      })
 
       this.$nextTick(() => {
         const chatWindow = document.querySelector(".chat-window");
