@@ -313,7 +313,7 @@ export default {
         this.messages.pop();
         this.messages.push({
           sender: "Bot",
-          text: markdown,
+          text: markdownToHtml(markdown),
           date: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -383,7 +383,7 @@ export default {
           }
         );
         const markdown = response.data.choices[0].message.content;
-        return markdownToHtml(markdown);
+        return markdown;
       } catch (error) {
         console.log(error);
       }
