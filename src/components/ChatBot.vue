@@ -13,7 +13,6 @@
 
     <template v-slot:append>
       <v-btn icon="mdi-plus" @click="newChat" variant="text"></v-btn>
-      
     </template>
     <v-divider></v-divider>
 
@@ -27,7 +26,6 @@
         <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
           <img :src="robotIcon" width="30" height="30" class="bot-icon" />
           <v-card class="bot-message">
-            
             <div class="pa-2" v-html="msg.text"></div>
             <p class="date pa-1">{{ msg.date }}</p>
           </v-card>
@@ -106,7 +104,7 @@ export default {
             hour12: false,
           }),
         },
-            {
+        {
           sender: "Bot",
           text: "Por favor, responde las siguientes preguntas:",
           date: new Date().toLocaleTimeString([], {
@@ -206,7 +204,6 @@ export default {
           }),
         });
         this.sendMessage();
-        
       }
     },
     sendUserMessage() {
@@ -267,17 +264,16 @@ export default {
         const chatWindow = document.querySelector(".chat-window");
         chatWindow.scrollTop = chatWindow.scrollHeight;
       });
-    
+
       this.askNextQuestion();
     },
 
     async sendMessage() {
       try {
-        
         this.userMessage = "";
         this.limitReached = true;
         const response = await axios.post(
-          "api/process",
+          `${this.apiBackend}/api/v1/process/process`,
           {
             country: this.dataSend.country,
             category: this.dataSend.category,
@@ -298,7 +294,7 @@ export default {
             },
           }
         );
-        
+
         this.messages.push({
           sender: "Bot",
           text: markdownToHtml("**Generando informe...**"),
@@ -323,18 +319,17 @@ export default {
         this.messages.push({
           sender: "Bot",
           text: markdownToHtml(
-          "**Gracias por usar nuestro service de Optifood IA. ¡Hasta luego!**"
+            "**Gracias por usar nuestro service de Optifood IA. ¡Hasta luego!**"
           ),
           date: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
           }),
-        })
+        });
       } catch (error) {
         console.log(error);
       }
-      
 
       this.$nextTick(() => {
         const chatWindow = document.querySelector(".chat-window");
@@ -357,6 +352,7 @@ export default {
             - Presenta listas con viñetas claras e indentación.
             - Usa tablas con bordes para mostrar acciones (con columnas: Acción, Responsable, Días, KPI, Ahorro estimado) y deja espacios entre cada una para una correcta visualización.
             - Separa visualmente cada sección con espacios en blanco.
+            
             
             Aquí está el JSON del informe:
 
