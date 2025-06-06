@@ -1,6 +1,7 @@
+const apiBackend = import.meta.env.VITE_API_BACKEND;
 export default async function handler(req, res) {
   try {
-    const response = await fetch("http://54.163.36.46:8000/api/v1/process/process", {
+    const response = await fetch(`${apiBackend}/api/v1/process/process`, {
       method: req.method,
       headers: {
         "Content-Type": "application/json",
