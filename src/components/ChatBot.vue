@@ -13,7 +13,7 @@
 
     <template v-slot:append>
       <v-btn icon="mdi-plus" @click="newChat" variant="text"></v-btn>
-      <v-btn icon="mdi-close" @click="showChat = false" variant="text"></v-btn>
+      
     </template>
     <v-divider></v-divider>
 
@@ -25,20 +25,19 @@
         :class="msg.sender === 'Bot' ? 'justify-start' : 'justify-end'"
       >
         <div class="d-flex container-bot" v-if="msg.sender === 'Bot'">
-          <img :src="robotIcon" width="30" height="30" />
-
-          <v-card class="bot-message ml- pa-2">
-            <div v-if="writting" v-html="msg.text"></div>
-            <div v-else class="mb-2 pa-2" v-html="msg.text"></div>
-            <p class="date-bot">{{ msg.date }}</p>
+          <img :src="robotIcon" width="30" height="30" class="bot-icon" />
+          <v-card class="bot-message">
+            
+            <div class="pa-2" v-html="msg.text"></div>
+            <p class="date pa-1">{{ msg.date }}</p>
           </v-card>
         </div>
         <div class="d-flex" v-if="msg.sender === 'Tu'">
-          <v-card class="user-message mr- pa-2">
+          <v-card class="user-message pa-2">
             <p style="color: white">{{ msg.text }}</p>
             <p class="date-user">{{ msg.date }}</p>
           </v-card>
-          <img :src="usesrIcon" width="30" height="30" />
+          <img :src="usesrIcon" width="30" height="30" class="user-icon" />
         </div>
       </div>
     </v-card-text>
@@ -49,13 +48,13 @@
       width="90%"
       bg-color="black"
       v-model="userMessage"
-      label="Escribe tú pregunta sobre nutrición..."
-      @keyup.enter="sendMessage"
+      label="Responder pregunta..."
+      @keyup.enter="sendUserMessage"
       variant="solo"
       density="compact"
       hide-details
       single-line
-      @click:append-inner="sendMessage"
+      @click:append-inner="sendUserMessage"
     >
       <template v-slot:append-inner>
         <img
@@ -94,18 +93,22 @@ export default {
       userMessage: "",
       limitReached: false,
       apiBackend: import.meta.env.VITE_API_BACKEND,
+      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
       writting: false,
-      // conversation: [
-      //   {
-      //     role: "system",
-      //     content:
-      //       "Eres un experto en optimización y manejo de recursos orgánicos. Tu principal función es dar consejos para evitar tantos desechos de alimentos en el hogar. Responde siempre en un formato adecuado para mostrar en un chat y usa titulos adecuados minimo h2 y listas adeacuadas con sangria respectivamente. Todo lo que respondas va a estar relacionado con ese tema.",
-      //   },
-      // ],
+      currentQuestionIndex: 0,
       messages: [
         {
           sender: "Bot",
-          text: "¡Hola! Soy Optifood IA, tu asistente personal. Estoy aquí para ayudarte a reducir el desperdicio de alimentos en casa. Solo puedo responder una pregunta.",
+          text: "¡Hola! Soy Optifood IA, tu asistente personal. Estoy aquí para ayudarte a reducir el desperdicio de alimentos. Solo puedo responder una pregunta.",
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        },
+            {
+          sender: "Bot",
+          text: "Por favor, responde las siguientes preguntas:",
           date: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -127,7 +130,38 @@ export default {
         shelf_life_days: null,
         additional_context: null,
       },
+      questions: [
+        "¿En qué país se encuentra la empresa?",
+        "Escriba la categoría del alimento",
+        "¿Cuántas toneladas ha comprado la empresa?",
+        "¿Cuántas toneladas se han desperdiciado?",
+        "¿Cuál es el valor total de las compras?",
+        "¿Cuánto es el volumen de ventas?",
+        "¿Cuál es la temperatura de almacenamiento?",
+        "¿Cuál es el método de rotación?",
+        "¿Cuántos días de lead time?",
+        "¿Cuál es la frecuencia de pedido?",
+        "¿Cuántos días de shelf life?",
+        "¿Tienes alguna otra información adicional?",
+      ],
+      questionKeys: [
+        "country",
+        "category",
+        "purchased_tons",
+        "wasted_tons",
+        "total_value",
+        "sales_volume",
+        "storage_temperature",
+        "rotation_method",
+        "lead_time_days",
+        "order_frequency",
+        "shelf_life_days",
+        "additional_context",
+      ],
     };
+  },
+  mounted() {
+    this.askNextQuestion();
   },
   methods: {
     async newChat() {
@@ -145,8 +179,40 @@ export default {
       this.userMessage = "";
       this.limitReached = false;
     },
-    async sendMessage() {
+    async askNextQuestion() {
+      if (this.currentQuestionIndex < this.questions.length) {
+        const question = this.questions[this.currentQuestionIndex];
+        this.messages.push({
+          sender: "Bot",
+          text: markdownToHtml(
+            `**${this.currentQuestionIndex + 1}. ${question}**`
+          ),
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        });
+      } else {
+        this.messages.push({
+          sender: "Bot",
+          text: markdownToHtml(
+            "✅ **Gracias por responder. Procesando información...**"
+          ),
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        });
+        this.sendMessage();
+        
+      }
+    },
+    sendUserMessage() {
       if (!this.userMessage.trim()) return;
+
+      // Mostrar mensaje del usuario
       this.messages.push({
         sender: "Tu",
         text: this.userMessage,
@@ -156,21 +222,75 @@ export default {
           hour12: false,
         }),
       });
-      this.writting = true;
-      this.messages.push({
-        sender: "Bot",
-        text: markdownToHtml("**Escribiendo...**"),
-        date: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        }),
+
+      // Guardar respuesta en el campo correcto
+      const key = this.questionKeys[this.currentQuestionIndex];
+      if (key) {
+        const value = this.userMessage.trim();
+        const numericKeys = [
+          "purchased_tons",
+          "wasted_tons",
+          "total_value",
+          "sales_volume",
+          "lead_time_days",
+          "shelf_life_days",
+        ];
+        if (numericKeys.includes(key) && isNaN(parseFloat(value))) {
+          this.messages.push({
+            sender: "Bot",
+            text: markdownToHtml(
+              `⚠️ Por favor, ingresa un valor numérico válido para **${this.questions[
+                this.currentQuestionIndex
+              ].toLowerCase()}**.`
+            ),
+            date: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }),
+          });
+          this.userMessage = "";
+          this.$nextTick(() => {
+            const chatWindow = document.querySelector(".chat-window");
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+          });
+          return;
+        }
+        this.dataSend[key] = numericKeys.includes(key)
+          ? parseFloat(value)
+          : value;
+      }
+
+      this.userMessage = "";
+      this.currentQuestionIndex++;
+      this.$nextTick(() => {
+        const chatWindow = document.querySelector(".chat-window");
+        chatWindow.scrollTop = chatWindow.scrollHeight;
       });
+    
+      this.askNextQuestion();
+    },
+
+    async sendMessage() {
       try {
+        
+        this.userMessage = "";
+        this.limitReached = true;
         const response = await axios.post(
-          `${this.apiBackend}`,
+          `${this.apiBackend}/api/v1/process/process`,
           {
-            dataSend: this.dataSend,
+            country: this.dataSend.country,
+            category: this.dataSend.category,
+            purchased_tons: this.dataSend.purchased_tons,
+            wasted_tons: this.dataSend.wasted_tons,
+            total_value: this.dataSend.total_value,
+            sales_volume: this.dataSend.sales_volume,
+            storage_temperature: this.dataSend.storage_temperature,
+            rotation_method: this.dataSend.rotation_method,
+            lead_time_days: this.dataSend.lead_time_days,
+            order_frequency: this.dataSend.order_frequency,
+            shelf_life_days: this.dataSend.shelf_life_days,
+            additional_context: this.dataSend.additional_context,
           },
           {
             headers: {
@@ -178,17 +298,95 @@ export default {
             },
           }
         );
+        
+        this.messages.push({
+          sender: "Bot",
+          text: markdownToHtml("**Generando informe...**"),
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        });
+        const informe = response.data;
+        const markdown = await this.JsonToMarkdownWithOpenAI(informe);
+        this.messages.pop();
+        this.messages.push({
+          sender: "Bot",
+          text: markdown,
+          date: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+        });
       } catch (error) {
         console.log(error);
       }
-      this.userMessage = "";
-      this.limitReached = false;
-      this.writting = false;
+      
+      this.messages.push({
+        sender: "Bot",
+        text: markdownToHtml(
+        "**Gracias por usar nuestro service de Optifood IA. ¡Hasta luego!**"
+        ),
+        date: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+      })
 
       this.$nextTick(() => {
         const chatWindow = document.querySelector(".chat-window");
         chatWindow.scrollTop = chatWindow.scrollHeight;
       });
+    },
+    async JsonToMarkdownWithOpenAI(jsonInforme) {
+      const mensajes = [
+        {
+          role: "system",
+          content:
+            "Eres un profesional que analiza informes de desperdicio y transcribes el informe de manera clara y concisa.",
+        },
+        {
+          role: "user",
+          content: `
+            Analiza y presenta este informe de desperdicio en alimentos con el siguiente formato:
+            - Usa formato markdown para presentar el informe.
+            - Usa títulos y subtítulos para secciones importantes (como causas raíz, acciones inmediatas, etc.) minimo h2.
+            - Presenta listas con viñetas claras e indentación.
+            - Usa tablas con bordes para mostrar acciones (con columnas: Acción, Responsable, Días, KPI, Ahorro estimado) y deja espacios entre cada una para una correcta visualización.
+            - Separa visualmente cada sección con espacios en blanco.
+            
+            Aquí está el JSON del informe:
+
+            \`\`\`json
+            ${JSON.stringify(jsonInforme, null, 2)}
+            \`\`\`
+            `,
+        },
+      ];
+
+      try {
+        const response = await axios.post(
+          `https://api.openai.com/v1/chat/completions`,
+          {
+            model: "gpt-4o-mini",
+            messages: mensajes,
+            temperature: 0.4,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.apiKey}`,
+            },
+          }
+        );
+        const markdown = response.data.choices[0].message.content;
+        return markdownToHtml(markdown);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
@@ -197,47 +395,40 @@ export default {
 <style scoped>
 .chat-card {
   width: 100%;
-  max-width: 550px;
+  max-width: 600px;
   position: fixed;
   bottom: 5px;
-  height: calc(100% - 10px);
+  height: calc(100%);
   right: 0px;
   margin: 0 10px;
 }
 
 @media (max-width: 600px) {
   .chat-card {
-    bottom: 10px;
-    right: 0;
-    left: 0;
-
     margin: 0 auto;
-    border-radius: 10px 10px 0 0;
   }
 }
 
 .chat-window {
   background-color: #eceff1;
-  border-radius: 0;
+
   width: 100%;
   height: calc(100% - 140px);
   box-shadow: inset 0px 0px 10px rgb(177, 175, 175);
 }
-@media (max-width: 600px) {
-}
+
 .date {
-  font-size: 12px;
+  font-size: 0.7rem;
   color: #706c6c;
   margin-top: 5px;
 }
 .date-user {
-  font-size: 12px;
   color: #ddd8d8;
   margin-top: 5px;
 }
 .bot-message {
   border-radius: 10px 10px 10px 1px !important;
-  margin-left: 5px;
+  margin-left: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: normal !important;
   background-color: #ffffff;
@@ -246,9 +437,25 @@ export default {
 .user-message {
   border-radius: 10px 10px 3px 10px !important;
   background: linear-gradient(90deg, #3b67df, #8430f1);
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: 0px !important;
+}
+@media (max-width: 600px) {
+  .bot-message {
+    font-size: 0.7rem !important;
+    max-width: 95% !important;
+  }
+  .user-message {
+    font-size: 0.7rem !important;
+  }
+  .bot-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  .user-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
 }
 
 .custom-input {

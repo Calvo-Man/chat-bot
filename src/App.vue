@@ -12,10 +12,26 @@ import ChatBot from "./components/ChatBot.vue";
 </template>
 
 <style>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-top: 50px ;
+.custom-input {
+  margin: 10px 25px;
+  border-radius: 20px !important;
+}
+.bot-message table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.bot-message th,
+.bot-message td {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.bot-message th {
+  background-color: #f5f5f5;
+}
+.bot-message li{
+  margin-left: 20px;
 }
 .logo {
   height: 6em;
