@@ -139,9 +139,9 @@ export default {
         "¿Cuánto es el volumen de ventas?",
         "¿Cuál es la temperatura de almacenamiento?",
         "¿Cuál es el método de rotación?",
-        "¿Cuántos días de lead time?",
+        "¿Cuántos días toma el tiempo de entrega?",
         "¿Cuál es la frecuencia de pedido?",
-        "¿Cuántos días de shelf life?",
+        "¿Cuántos días de vida útil tiene el producto?",
         "¿Tienes alguna otra información adicional?",
       ],
       questionKeys: [
