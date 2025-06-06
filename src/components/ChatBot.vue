@@ -273,7 +273,7 @@ export default {
         this.userMessage = "";
         this.limitReached = true;
         const response = await axios.post(
-          `api/process`,
+          `${this.apiBackend}/api/v1/process/process`,
           {
             country: this.dataSend.country,
             category: this.dataSend.category,
