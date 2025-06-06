@@ -1,4 +1,5 @@
 // api/process.js
+const apiUrl = import.meta.env.VITE_API_BACKEND;
 export default async function handler(req, res) {
   // Habilitar CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -11,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const backendRes = await fetch("http://54.163.36.46:8000/api/v1/process/process", {
+    const backendRes = await fetch(apiUrl+"/api/v1/process/process", {
       method: req.method,
       headers: {
         "Content-Type": "application/json",
