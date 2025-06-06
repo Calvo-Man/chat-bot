@@ -12,6 +12,7 @@ export function sendMessageToOpenAI(messages) {
   return openai.post('/chat/completions', {
     model: 'gpt-4o-mini',
     messages: messages,
-    temperature: 0.5
+    temperature: 0.5,
+    max_tokens:800,
   });
 }

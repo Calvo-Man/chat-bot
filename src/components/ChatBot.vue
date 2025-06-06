@@ -305,11 +305,12 @@ export default {
           }),
         });
         const informe = response.data;
+  
         const markdown = await this.JsonToMarkdownWithOpenAI(informe);
         this.messages.pop();
         this.messages.push({
           sender: "Bot",
-          text: markdownToHtml(markdown),
+          text: markdown,
           date: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -352,6 +353,7 @@ export default {
             - Presenta listas con viñetas claras e indentación.
             - Usa tablas con bordes para mostrar acciones (con columnas: Acción, Responsable, Días, KPI, Ahorro estimado) y deja espacios entre cada una para una correcta visualización.
             - Separa visualmente cada sección con espacios en blanco.
+            - Usa formato markdown para presentar el informe.
             
             
             Aquí está el JSON del informe:
@@ -379,7 +381,7 @@ export default {
           }
         );
         const markdown = response.data.choices[0].message.content;
-        return markdown;
+        return markdownToHtml(markdown);
       } catch (error) {
         console.log(error);
       }
